@@ -12,6 +12,8 @@ from afinn import Afinn
 from textblob import TextBlob
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 
 def URLCHECK():
     print ("This option will analyse a video based on the url entered.")
@@ -181,6 +183,44 @@ def URLCHECK():
 
     #Make sure to display each method's accuracy.
 
+def Pandas(): #https://www.kaggle.com/datasets/cedricaubin/ai-ml-salaries
+    salary_data = pd.read_csv("salaries.csv")
+    print (salary_data.shape)
+    salary_data.salary_in_usd.hist(figsize=(10,5), grid=False, color="#FC5864", ec="black", bins=10).set_title('salary')
+    plt.xlabel('Salary (USD)')
+    plt.ylabel('Frequency')
+    plt.show()
+        
+    min_salary = salary_data['salary_in_usd'].min()
+    max_salary = salary_data['salary_in_usd'].max()
+
+    fig, axs = plt.subplots(2, 2, figsize=(7, 7))
+
+    for i, (experience_level, group) in enumerate(salary_data.groupby('experience_level')):
+        row = i // 2
+        col = i % 2
+        axs[row, col].set_xlabel('Salary (USD)')
+        axs[row, col].set_ylabel('Frequency')
+        axs[row, col].grid(False)
+        
+        if experience_level == "SE":
+            group['salary_in_usd'].hist(ax=axs[row, col], color="#AAFC58", ec="black", bins=20, grid=False, range=(min_salary, max_salary))
+            axs[row, col].set_title(f'Salary Distribution for senior level position')
+        elif experience_level == "EN":
+            group['salary_in_usd'].hist(ax=axs[row, col], color="#58A3FC", ec="black", bins=20, grid=False, range=(min_salary, max_salary))
+            axs[row, col].set_title(f'Salary Distribution for entry level position')
+        elif experience_level == "MI":
+            group['salary_in_usd'].hist(ax=axs[row, col], color="#BE58FC", ec="black", bins=20, grid=False, range=(min_salary, max_salary))
+            axs[row, col].set_title(f'Salary Distribution for intermediate position')
+        elif experience_level == "EX":
+            group['salary_in_usd'].hist(ax=axs[row, col], color="#FCCF58", ec="black", bins=20, grid=False, range=(min_salary, max_salary))
+            axs[row, col].set_title(f'Salary Distribution for director position')
+
+    if len(salary_data['experience_level'].unique()) < 4:
+        axs[-1, -1].axis('off')
+
+    plt.tight_layout()
+    plt.show()
 x = 0
 while x == 0:
     print("Option 1: Youtube video analysis")
@@ -189,27 +229,10 @@ while x == 0:
     choice = input("Please choose option 1, 2 or 3: ")
     if choice == "1":
         URLCHECK()
-        choicecontinue = input("Would you like to choose another option (Y/N): ")
-        if choicecontinue == "n":
-            x = 1
-        elif choicecontinue == "Y" or "y":
-            x = 0
-
 
     elif choice == "2":
-        print ("You have chosen option 2")
-
-
-        choicecontinue = input("Would you like to choose another option (Y/N): ")
-        if choicecontinue == "n":
-            x = 1
-        elif choicecontinue =="N":
-            x = 1
-        elif choicecontinue == ("y", "Y"):
-            x = 0
-
-
-
+        Pandas()
+        
     elif choice == "3":
         print ("You have chosen option 3")
         x = 1
@@ -218,3 +241,12 @@ while x == 0:
 
     else:
         print ("Please choose a valid option")
+        
+        choicecontinue = input("Would you like to choose another option (Y/N): ")
+        if choicecontinue == "n":
+            x = 1
+        elif choicecontinue =="N":
+            x = 1
+        elif choicecontinue == ("y", "Y"):
+            x = 0
+    x = 1
