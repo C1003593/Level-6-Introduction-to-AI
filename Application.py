@@ -14,6 +14,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import csv
+import random
 
 def URLCHECK():
     print ("This option will analyse a video based on the url entered.")
@@ -224,7 +226,7 @@ def Pandas(): #https://www.kaggle.com/datasets/cedricaubin/ai-ml-salaries
     plt.show()
     
     
-    fig, axs = plt.subplots(2, 2, figsize=(9, 9))
+    fig, axs = plt.subplots(2, 2, figsize=(7, 7))
 
     for i, (remote_ratio, group) in enumerate(salary_data.groupby('remote_ratio')):
         row = i // 2
@@ -248,12 +250,249 @@ def Pandas(): #https://www.kaggle.com/datasets/cedricaubin/ai-ml-salaries
 
     plt.tight_layout()
     plt.show()
+    
+def csv_writer(): 
+    with open('file.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['name', 'age', 'gender', 'relationship_status', 'region', 'hair_colour', 'eye_colour', 'height(cm)'])
+        y = 0
+        while y <= 5000:
+            age = random.randint(16, 116)
+            
+            randrel = random.randint(1, 3)
+            if randrel == 1:
+                relationship = "Single"
+            elif randrel == 2:
+                relationship = "Married"
+            elif randrel == 3:
+                relationship = "Divorced"
+            
+            randgen = random.randint(1, 101)
+            if randgen < 50:
+                gender = "M"
+            elif randgen < 101 and randgen > 51:
+                gender = "F"
+            elif randgen == 101:
+                gender = "/"
+                
+            randreg = random.randint(1, 6)
+            if randreg == 1:
+                region = "Europe"
+            elif randreg == 2:
+                region = "Asia"
+            elif randreg == 3:
+                region = "Africa"
+            elif randreg == 4:
+                region = "Oceania"
+            elif randreg == 5:
+                region = "North America"
+            elif randreg == 6:
+                region = "South America"
+            
+            randhair = random.randint(1, 5)
+            if randhair == 1:
+                hair = "Blonde"
+            elif randhair == 2:
+                hair = "Black"
+            elif randhair == 3:
+                hair = "Red"
+            elif randhair == 4:
+                hair = "Grey"
+            elif randhair == 5:
+                hair = "Bald"
+                
+            randeye = random.randint(1, 4)
+            if randeye == 1:
+                eye = "Blue"
+            elif randeye == 2:
+                eye = "Green"
+            elif randeye == 3:
+                eye = "Grey"
+            elif randeye == 4:
+                eye = "Brown"
+            
+            if gender == "M":
+                height = random.randint(157, 196)
+            elif gender == "F":
+                height = random.randint(142, 188)
+            else:
+                height = random.randint(142, 196)
+                
+            firstrand = random.randint(1, 25)
+            lastrand = random.randint(1, 25)
+            
+            firstrand = random.randint(1, 25)
+            if gender == "M" or gender == "/":
+                match firstrand: 
+                    case 1:
+                        fname = "John"
+                    case 2:
+                        fname = "David"
+                    case 3:
+                        fname = "Adam"
+                    case 4:
+                        fname = "Ken"
+                    case 5:
+                        fname = "Matthew"
+                    case 6:
+                        fname = "Luke"
+                    case 7:
+                        fname = "Leo"
+                    case 8:
+                        fname = "Jeff"
+                    case 9:
+                        fname = "James"
+                    case 10:
+                        fname = "Robert"
+                    case 11:
+                        fname = "Ryan"
+                    case 12:
+                        fname = "Alex"
+                    case 13:
+                        fname = "Kyle"
+                    case 14:
+                        fname = "Ben"
+                    case 15:
+                        fname = "Daniel"
+                    case 16:
+                        fname = "Steven"
+                    case 17:
+                        fname = "Ronald"
+                    case 18:
+                        fname = "Ethan"
+                    case 19:
+                        fname = "Lee"
+                    case 20:
+                        fname = "Stan"
+                    case 21:
+                        fname = "Eric"
+                    case 22:
+                        fname = "Aubrey"
+                    case 23:
+                        fname = "Lewis"
+                    case 24:
+                        fname = "Kenny"
+                    case 25:
+                        fname = "Anthony"
+                        
+            elif gender == "F" or gender == "/":
+                match firstrand: 
+                    case 1:
+                        fname = "Allison"
+                    case 2:
+                        fname = "Jane"
+                    case 3:
+                        fname = "Elisa"
+                    case 4:
+                        fname = "Jackie"
+                    case 5:
+                        fname = "Alexa"
+                    case 6:
+                        fname = "Lucille"
+                    case 7:
+                        fname = "Beth"
+                    case 8:
+                        fname = "Taylor"
+                    case 9:
+                        fname = "Hayley"
+                    case 10:
+                        fname = "Ella"
+                    case 11:
+                        fname = "Karen"
+                    case 12:
+                        fname = "Rebecca"
+                    case 13:
+                        fname = "Betty"
+                    case 14:
+                        fname = "Reena"
+                    case 15:
+                        fname = "Fiona"
+                    case 16:
+                        fname = "Sylvia"
+                    case 17:
+                        fname = "Jade"
+                    case 18:
+                        fname = "Laura"
+                    case 19:
+                        fname = "Julie"
+                    case 20:
+                        fname = "Jenny"
+                    case 21:
+                        fname = "Phoebe"
+                    case 22:
+                        fname = "Jess"
+                    case 23:
+                        fname = "Hollie"
+                    case 24:
+                        fname = "Kyra"
+                    case 25:
+                        fname = "Lisa"
+                
+            match lastrand: 
+                case 1:
+                    lname = "Smith"
+                case 2:
+                    lname = "Baldwin"
+                case 3:
+                    lname = "Brown"
+                case 4:
+                    lname = "Gosling"
+                case 5:
+                    lname = "James"
+                case 6:
+                    lname = "Daniels"
+                case 7:
+                    lname = "Lee"
+                case 8:
+                    lname = "Nguyen"
+                case 9:
+                    lname = "Mcgill"
+                case 10:
+                    lname = "White"
+                case 11:
+                    lname = "Pinkman"
+                case 12:
+                    lname = "Shipman"
+                case 13:
+                    lname = "Beneke"
+                case 14:
+                    lname = "Marsden"
+                case 15:
+                    lname = "Firth"
+                case 16:
+                    lname = "Walker"
+                case 17:
+                    lname = "Hinch"
+                case 18:
+                    lname = "Anderson"
+                case 19:
+                    lname = "Stallard"
+                case 20:
+                    lname = "Arnold"
+                case 21:
+                    lname = "Caine"
+                case 22:
+                    lname = "Hufford"
+                case 23:
+                    lname = "Clark"
+                case 24:
+                    lname = "Jacques"
+                case 25:
+                    lname = "Potts"
+            
+            name = fname + " " + lname
+                
+                
+            writer.writerow([name, age, gender , relationship, region, hair, eye, height])
+            y = y + 1
+
 x = 0
 while x == 0:
     print("Option 1: Youtube video analysis")
     print("Option 2: Salaries dataset analysis")
     print("Option 3: ")
-    choice = input("Please choose option 1, 2 or 3: ")
+    print("Option 4: ")
+    choice = input("Please choose option 1, 2, 3 or 4: ")
     if choice == "1":
         URLCHECK()
 
@@ -290,10 +529,15 @@ while x == 0:
         elif choicecontinue == ("y", "Y"):
             x = 0
 
+    elif choice == "4":
+        print ("You have chosen option 4")
+        
+        csv_writer()
+        
+        x = 1
 
 
     else:
         print ("Please choose a valid option")
         
         
-    x = 1
