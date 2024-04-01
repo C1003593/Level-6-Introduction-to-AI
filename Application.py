@@ -524,10 +524,10 @@ while x == 0:
 
         # Valid genes 
         GENES = '''abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP 
-        QRSTUVWXYZ 1234567890, .-;:_!"#%&/()=?@${[]}'''
+        QRSTUVWXYZ 1234567890, .-;':_!"#%&/()=?@${[]}'''
 
         # Target string to be generated 
-        TARGET = "Pigeons, often referred to as the rats of the sky."
+        TARGET = "Test."
 
         class Individual(object): 
             ''' 
