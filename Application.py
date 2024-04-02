@@ -12,10 +12,12 @@ from afinn import Afinn
 from textblob import TextBlob
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
+import numpy
 import pandas as pd
 import matplotlib.pyplot as plt
 import csv
 import random
+import pygad
 
 def URLCHECK():
     print ("This option will analyse a video based on the url entered.")
@@ -250,7 +252,7 @@ def Pandas(): #https://www.kaggle.com/datasets/cedricaubin/ai-ml-salaries
 
     plt.tight_layout()
     plt.show()
-
+    
 def csv_writer(): 
     with open('file.csv', 'w', newline='') as file:
         writer = csv.writer(file)
@@ -490,7 +492,7 @@ x = 0
 while x == 0:
     print("Option 1: Youtube video analysis")
     print("Option 2: Salaries dataset classification")
-    print("Option 3: Computer vision")
+    print("Option 3: Evolutionary programming")
     print("Option 4: CSV file generator")
     choice = input("Please choose option 1, 2, 3 or 4: ")
     if choice == "1":
@@ -518,148 +520,34 @@ while x == 0:
         
     elif choice == "3":
         print ("You have chosen option 3")
+
+        function_inputs = [4,-2,3.5,5,-11,-4.7]  
+        desired_output = 100  
+
+        def fitness_func(solution, solution_idx):
+            output = numpy.sum(solution * function_inputs)
+            fitness = 1.0 / numpy.abs(output - desired_output)
+            return fitness
+
+        num_generations = 50
+        num_parents_mating = 10
+        sol_per_pop = 50
+        num_genes = len(function_inputs)
+        init_range_low = -2
+        init_range_high = 5
+        mutation_percent_genes = 1
+
+        ga_instance = pygad.GA(num_generations=num_generations,
+                            num_parents_mating=num_parents_mating, 
+                            fitness_func=fitness_func,
+                            sol_per_pop=sol_per_pop, 
+                            num_genes=num_genes,
+                            init_range_low=init_range_low,
+                            init_range_high=init_range_high,
+                            mutation_percent_genes=mutation_percent_genes)
+        ga_instance.run()
+        ga_instance.plot_result()
         
-        # Number of individuals in each generation 
-        POPULATION_SIZE = 100
-
-        # Valid genes 
-        GENES = '''abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP 
-        QRSTUVWXYZ 1234567890, .-;':_!"#%&/()=?@${[]}'''
-
-        # Target string to be generated 
-        TARGET = "Test."
-
-        class Individual(object): 
-            ''' 
-            Class representing individual in population 
-            '''
-            def __init__(self, chromosome): 
-                self.chromosome = chromosome  
-                self.fitness = self.cal_fitness() 
-
-            @classmethod
-            def mutated_genes(cls): 
-                ''' 
-                create random genes for mutation 
-                '''
-                global GENES 
-                gene = random.choice(GENES) 
-                return gene 
-
-            @classmethod
-            def create_gnome(cls): 
-                ''' 
-                create chromosome or string of genes 
-                '''
-                global TARGET 
-                gnome_len = len(TARGET) 
-                return [cls.mutated_genes() for _ in range(gnome_len)] 
-
-            def mate(self, par2): 
-                ''' 
-                Perform mating and produce new offspring 
-                '''
-
-                # chromosome for offspring 
-                child_chromosome = [] 
-                for gp1, gp2 in zip(self.chromosome, par2.chromosome):     
-
-                    # random probability   
-                    prob = random.random() 
-
-                    # if prob is less than 0.45, insert gene 
-                    # from parent 1  
-                    if prob < 0.45: 
-                        child_chromosome.append(gp1) 
-
-                    # if prob is between 0.45 and 0.90, insert 
-                    # gene from parent 2 
-                    elif prob < 0.90: 
-                        child_chromosome.append(gp2) 
-
-                    # otherwise insert random gene(mutate),  
-                    # for maintaining diversity 
-                    else: 
-                        child_chromosome.append(self.mutated_genes()) 
-
-                # create new Individual(offspring) using  
-                # generated chromosome for offspring 
-                return Individual(child_chromosome) 
-
-            def cal_fitness(self): 
-                ''' 
-                Calculate fitness score, it is the number of 
-                characters in string which differ from target 
-                string. 
-                '''
-                global TARGET 
-                fitness = 0
-                for gs, gt in zip(self.chromosome, TARGET): 
-                    if gs != gt: fitness+= 1
-                return fitness 
-
-        # Driver code 
-        def main(): 
-            global POPULATION_SIZE 
-
-            #current generation 
-            generation = 1
-
-            found = False
-            population = [] 
-
-            # create initial population 
-            for _ in range(POPULATION_SIZE): 
-                gnome = Individual.create_gnome() 
-                population.append(Individual(gnome)) 
-
-            while not found: 
-
-                # sort the population in increasing order of fitness score 
-                population = sorted(population, key = lambda x:x.fitness) 
-
-                # if the individual having lowest fitness score ie.  
-                # 0 then we know that we have reached to the target 
-                # and break the loop 
-                if population[0].fitness <= 0: 
-                    found = True
-                    break
-
-                # Otherwise generate new offsprings for new generation 
-                new_generation = [] 
-
-                # Perform Elitism, that mean 10% of fittest population 
-                # goes to the next generation 
-                s = int((10*POPULATION_SIZE)/100) 
-                new_generation.extend(population[:s]) 
-
-                # From 50% of fittest population, Individuals  
-                # will mate to produce offspring 
-                s = int((90*POPULATION_SIZE)/100) 
-                for _ in range(s): 
-                    parent1 = random.choice(population[:50]) 
-                    parent2 = random.choice(population[:50]) 
-                    child = parent1.mate(parent2) 
-                    new_generation.append(child) 
-
-                population = new_generation 
-
-                print("Generation: {}\tString: {}\tFitness: {}".format(
-                    generation,
-                    "".join(population[0].chromosome),
-                    population[0].fitness
-                ))
-
-                generation += 1
-
-            print("Generation: {}\tString: {}\tFitness: {}".format(
-                generation,
-                "".join(population[0].chromosome),
-                population[0].fitness
-            ))
-
-        if __name__ == '__main__': 
-            main()  
         
         
         choicecontinue = input("Would you like to choose another option (Y/N): ")
@@ -672,7 +560,6 @@ while x == 0:
 
     elif choice == "4":
         print ("You have chosen option 4")
-        
         csv_writer()
         
         x = 1
