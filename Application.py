@@ -186,6 +186,8 @@ def URLCHECK():
     plt.show()
 
     #Make sure to display each method's accuracy.
+    #Make sure to display overall positive and negative score
+    #Make sure to display the most used positive word and most used negative word
 
 def Pandas(): #https://www.kaggle.com/datasets/cedricaubin/ai-ml-salaries
     print ("This option will analysis the salaries dataset.")
@@ -194,7 +196,7 @@ def Pandas(): #https://www.kaggle.com/datasets/cedricaubin/ai-ml-salaries
     salary_data.salary_in_usd.hist(figsize=(10,5), grid=False, color="#FC5864", ec="black", bins=10).set_title('salary')
     plt.xlabel('Salary (USD)')
     plt.ylabel('Frequency')
-    plt.show()
+
         
     min_salary = salary_data['salary_in_usd'].min()
     max_salary = salary_data['salary_in_usd'].max()
@@ -225,7 +227,7 @@ def Pandas(): #https://www.kaggle.com/datasets/cedricaubin/ai-ml-salaries
         axs[-1, -1].axis('off')
 
     plt.tight_layout()
-    plt.show()
+
     
     
     fig, axs = plt.subplots(2, 2, figsize=(7, 7))
@@ -254,11 +256,14 @@ def Pandas(): #https://www.kaggle.com/datasets/cedricaubin/ai-ml-salaries
     plt.show()
     
 def csv_writer(): 
+    print("This option will make a randomised data file.")
     with open('file.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(['name', 'age', 'gender', 'relationship_status', 'region', 'hair_colour', 'eye_colour', 'height(cm)'])
         y = 0
-        while y <= 5000:
+        z = input("PLease choose the amount of records you'd like to generate: ")
+        z = int(z)
+        while y < z:
             age = random.randint(16, 116)
             
             randrel = random.randint(1, 3)
@@ -266,7 +271,7 @@ def csv_writer():
                 relationship = "Single"
             elif randrel == 2:
                 relationship = "Married"
-            elif randrel == 3:
+            elif randrel == 3: 
                 relationship = "Divorced"
             
             randgen = random.randint(1, 101)
@@ -562,8 +567,13 @@ while x == 0:
         print ("You have chosen option 4")
         csv_writer()
         
-        x = 1
-
+        choicecontinue = input("Would you like to choose another option (Y/N): ")
+        if choicecontinue == "n":
+            x = 1
+        elif choicecontinue =="N":
+            x = 1
+        elif choicecontinue == ("y", "Y"):
+            x = 0
 
     else:
         print ("Please choose a valid option")
