@@ -28,6 +28,7 @@ def URLCHECK():
     Videourl = input("Please enter a video url: ")
     VideourlSplit = Videourl.split("=")
     video_id = VideourlSplit[1]
+    #https://www.youtube.com/watch?v=reUZRyXxUs4
 
 
     def get_all_english_video_comments(youtube, **kwargs):
@@ -188,6 +189,7 @@ def URLCHECK():
     #Make sure to display each method's accuracy.
     #Make sure to display overall positive and negative score
     #Make sure to display the most used positive word and most used negative word
+    #Show metadata about the video
 
 def Pandas(): #https://www.kaggle.com/datasets/cedricaubin/ai-ml-salaries
     print ("This option will analysis the salaries dataset.")
