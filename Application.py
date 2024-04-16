@@ -186,7 +186,6 @@ def URLCHECK():
     plt.gca().invert_yaxis()
     plt.show()
 
-    #Make sure to display each method's accuracy.
     #Make sure to display overall positive and negative score
     #Make sure to display the most used positive word and most used negative word
     #Show metadata about the video
@@ -256,6 +255,9 @@ def Pandas(): #https://www.kaggle.com/datasets/cedricaubin/ai-ml-salaries
 
     plt.tight_layout()
     plt.show()
+    
+    #Regression
+    #Classification
     
 def csv_writer(): 
     print("This option will make a randomised data file.")
@@ -555,6 +557,7 @@ while x == 0:
         ga_instance.run()
         ga_instance.plot_result()
         
+        #Pygad
         
         
         choicecontinue = input("Would you like to choose another option (Y/N): ")
@@ -566,6 +569,7 @@ while x == 0:
             x = 0
 
     elif choice == "4":
+        #Decision tree
         print ("You have chosen option 4")
         csv_writer()
         
