@@ -25,6 +25,59 @@ medical_data.columns = [
     "Result",
 ]
 
+#This replaces the labels with male and female instead of just 0 or 1
+medical_data['Gender'] = medical_data['Gender'].replace({0: 'Female', 1: 'Male'})
+
+#This sets the sizes for axis on the plots
+plt.rcParams['figure.figsize'] = [10, 6]  
+plt.rcParams['axes.titlesize'] = 16  
+plt.rcParams['axes.labelsize'] = 14  
+plt.rcParams['xtick.labelsize'] = 12  
+plt.rcParams['ytick.labelsize'] = 12
+fig, axes = plt.subplots(3, 3)
+axes = axes.flatten()  
+
+#This ensures that each plot is labeled properly
+for i, col in enumerate(medical_data.columns):
+    medical_data[col].hist(bins=15, ax=axes[i], edgecolor='black', grid=False)
+    plt.ylabel('Frequency')
+    if col == 'Gender':  
+        axes[i].set_xticks([0, 1])  
+        axes[i].set_xticklabels(['Female', 'Male'])  
+        axes[i].set_xlabel('Gender assigned at birth') 
+        
+    elif col == "Age":
+        axes[i].set_xlabel('Age (Years)') 
+        
+    elif col == "Heart rate":
+        axes[i].set_xlabel('Heart rate (BPM)') 
+        
+    elif col == "Systolic blood pressure":
+        axes[i].set_xlabel('Blood pressure (mmHg)') 
+        
+    elif col == "Diastolic blood pressure":
+        axes[i].set_xlabel('Blood pressure (mmHg)') 
+        
+    elif col == "Blood sugar":
+        axes[i].set_xlabel('Age (Years)') 
+        
+    elif col == "CK-MB":
+        axes[i].set_xlabel('CK-MB (μg/L)') 
+        
+    elif col == "Troponin":
+        axes[i].set_xlabel('Troponin levels (ng/mL)') 
+        
+    elif col == "Result":
+        axes[i].set_xlabel('Had a heart attack before?') 
+        
+        
+    axes[i].set_title(col) 
+    axes[i].set_ylabel('Frequency') 
+
+#This sets the display settings for the plot
+plt.subplots_adjust(left=0.05, right=0.95, top=0.93, bottom=0.07, wspace=0.5, hspace=0.5)
+plt.show()
+
 #Remove gender as this can mess up the graph
 medical_data = medical_data.drop("Gender", axis=1)
 
