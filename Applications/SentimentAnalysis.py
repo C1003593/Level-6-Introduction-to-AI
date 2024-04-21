@@ -21,7 +21,6 @@ video_id = VideourlSplit[1]
 #https://www.youtube.com/watch?v=reUZRyXxUs4
 #https://www.youtube.com/watch?v=QOCZYRXL0AQ
 
-
 def get_all_english_video_comments(youtube, **kwargs):
     comments = []
     timestamps = []  
@@ -40,7 +39,7 @@ def get_all_english_video_comments(youtube, **kwargs):
             break
     return comments, timestamps
 
-
+#Comments are preprocessed
 def preprocess_comments(comments):
     preprocessed_comments = []
     for comment in comments:
