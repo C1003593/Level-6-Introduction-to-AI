@@ -7,6 +7,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import confusion_matrix, classification_report
 
 Salary_data = pd.read_csv("DataScience_salaries_2024.csv")
+#https://www.kaggle.com/datasets/saurabhbadole/latest-data-science-job-salaries-2024
 
 # We'll focus on predicting salary ranges based on other features
 # For simplicity, we'll only use a subset of features
