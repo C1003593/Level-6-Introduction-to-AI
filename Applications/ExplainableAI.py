@@ -50,7 +50,7 @@ dt_clf.fit(X_train, y_train)
 
 y_pred = dt_clf.predict(X_test)
 
-
+#This shows how accurate the application is
 print(classification_report(y_pred, y_test))
 
 # Get the feature names

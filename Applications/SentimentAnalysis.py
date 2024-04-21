@@ -8,6 +8,8 @@ from textblob import TextBlob
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.dates import DateFormatter
 
 api_key = "AIzaSyAtD0eBdYNMR1crlbNjCc_exLWfDCafxQY"
 youtube = build("youtube", "v3", developerKey=api_key)
@@ -15,7 +17,9 @@ youtube = build("youtube", "v3", developerKey=api_key)
 Videourl = input("Please enter a video url: ")
 VideourlSplit = Videourl.split("=")
 video_id = VideourlSplit[1]
+
 #https://www.youtube.com/watch?v=reUZRyXxUs4
+#https://www.youtube.com/watch?v=WgR6mUSsEig
 
 
 def get_all_english_video_comments(youtube, **kwargs):
@@ -44,6 +48,27 @@ def preprocess_comments(comments):
         preprocessed_comments.append(comment)
     return preprocessed_comments
 
+def get_video_details(youtube, video_id):
+    request = youtube.videos().list(
+        part="snippet,statistics",
+        id=video_id
+    )
+    response = request.execute()
+    return response['items'][0]
+
+video_details = get_video_details(youtube, video_id)
+
+
+video_title = video_details['snippet']['title']
+video_description = video_details['snippet']['description']
+channel_title = video_details['snippet']['channelTitle']
+published_at = video_details['snippet']['publishedAt']
+
+statistics = video_details.get('statistics', {})
+views = statistics.get('viewCount', 'Not available')
+likes = statistics.get('likeCount', 'Not available')
+dislikes = statistics.get('dislikeCount', 'Not available')
+comment_count = statistics.get('commentCount', 'Not available')
 
 comments, timestamps = get_all_english_video_comments(youtube, part='snippet', videoId=video_id, textFormat='plainText')
 
@@ -119,6 +144,37 @@ afinn_sentiment_counts = df['AFINN Sentiment'].value_counts()
 textblob_sentiment_counts = df['TextBlob Sentiment'].value_counts()
 
 
+
+plt.figure(figsize=(8, 5))
+labels = ['Positive', 'Neutral', 'Negative']
+vader_sizes = [vader_sentiment_counts.get(sentiment, 0) for sentiment in labels]
+afinn_sizes = [afinn_sentiment_counts.get(sentiment, 0) for sentiment in labels]
+textblob_sizes = [textblob_sentiment_counts.get(sentiment, 0) for sentiment in labels]
+plt.suptitle(f'Positive and negative comment distribution for video: {video_title}')
+
+explode = (0.1, 0, 0)  
+
+# VADER
+plt.subplot(1, 3, 1)
+plt.pie(vader_sizes, explode=explode, labels=labels, autopct='%1.1f%%',
+        shadow=True, startangle=90, colors=['lightblue', 'lightcoral', 'lightgreen'])
+plt.title('VADER Sentiment Distribution')
+
+# AFINN
+plt.subplot(1, 3, 2)
+plt.pie(afinn_sizes, explode=explode, labels=labels, autopct='%1.1f%%',
+        shadow=True, startangle=90, colors=['lightblue', 'lightcoral', 'lightgreen'])
+plt.title('AFINN Sentiment Distribution')
+
+# TextBlob
+plt.subplot(1, 3, 3)
+plt.pie(textblob_sizes, explode=explode, labels=labels, autopct='%1.1f%%',
+        shadow=True, startangle=90, colors=['lightblue', 'lightcoral', 'lightgreen'])
+plt.title('TextBlob Sentiment Distribution')
+
+plt.tight_layout()
+plt.show()
+
 print("VADER Sentiment Summary:")
 print(vader_sentiment_counts)
 
@@ -131,15 +187,25 @@ print("\nTextBlob Sentiment Summary:")
 print(textblob_sentiment_counts)
 
 
+df = df.iloc[::-1]
+
 plt.figure(figsize=(12, 6))
 plt.plot(df['Timestamps'], df['VADER Compound'], label='VADER', color='lightblue')
 plt.plot(df['Timestamps'], afinn_sentiments, label='AFINN', color='lightcoral')
 plt.plot(df['Timestamps'], textblob_sentiments, label='TextBlob', color='lightgreen')
-plt.title(f'Sentiment Analysis Over Time for Video {video_id}')
+
+
+num_ticks = 8  
+x_ticks = np.linspace(0, len(df['Timestamps']) - 1, num_ticks, dtype=int)
+plt.xticks(x_ticks, [df['Timestamps'].iloc[i] for i in x_ticks], rotation=45)
+
+plt.title(f'Sentiment Analysis Over Time for video: {video_title}')
 plt.xlabel('Timestamp')
 plt.ylabel('Sentiment Polarity Score')
 plt.legend()
-plt.xticks(rotation=45)
+
+plt.tight_layout()
+plt.show()
 
 
 plt.figure(figsize=(10, 6))
@@ -161,7 +227,7 @@ plt.bar([i + width * 2 for i in x], textblob_counts, width, label='TextBlob', al
 plt.xlabel('Sentiment Category')
 plt.ylabel('Number of Comments')
 plt.xticks([i + width for i in x], sentiments)
-plt.title(f'Sentiment Analysis Comparison for Video {video_id}')
+plt.title(f'Sentiment Analysis Comparison for Video {video_title}')
 plt.legend()
 
 
@@ -173,7 +239,18 @@ plt.ylabel('Word')
 plt.gca().invert_yaxis()
 plt.show()
 
-#Make sure to display overall positive and negative score
-#Make sure to display the most used positive word and most used negative word
-#Show metadata about the video
+published_at = published_at.replace("T", " " )
+published_at = published_at.replace("Z", " " )
+print("\n")
+print("Video Title:", video_title)
+print("Channel Title:", channel_title)
+print("Published At:", published_at)
+print("\n")
+print("Description:", video_description)
+print("\n")
+print("Views:", views)
+print("Likes:", likes)
+print("Dislikes:", dislikes)
+print("Comment count:", comment_count)
+
 
