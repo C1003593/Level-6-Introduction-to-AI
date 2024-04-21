@@ -19,7 +19,7 @@ VideourlSplit = Videourl.split("=")
 video_id = VideourlSplit[1]
 
 #https://www.youtube.com/watch?v=reUZRyXxUs4
-#https://www.youtube.com/watch?v=WgR6mUSsEig
+#https://www.youtube.com/watch?v=QOCZYRXL0AQ
 
 
 def get_all_english_video_comments(youtube, **kwargs):
@@ -252,5 +252,28 @@ print("Views:", views)
 print("Likes:", likes)
 print("Dislikes:", dislikes)
 print("Comment count:", comment_count)
+print("\n")
+
+#https://viralyft.com/blog/youtube-like-to-view-ratio#:~:text=Marketing%20specialists%20often%20suggest%20aiming,likes%20for%20every%201%2C000%20views. Source on 4% figure
+print("An average video has the like to view ratio of 4:100 or 4%")
+viewsint = int(views)
+likesint = int(likes)
+ViewtoLikeRatio = (likesint/viewsint)*100
+ViewtoLikeRatio = round(ViewtoLikeRatio, 1)
+ViewtoLikeRatio = str(ViewtoLikeRatio)
+print("This video has a like to view ratio of " + ViewtoLikeRatio + ":100 or " + ViewtoLikeRatio + "%")
+print("\n")
+
+#https://blog.promolta.com/how-to-measure-your-viewer-engagement#:~:text=Golden's%20ratio%20for%20comments%20to,two%20hundred%20viewers%20will%20comment. Source on 0.5% figure on comments
+print("An average video has the comment to view ratio of 5:1000 or 0.5%")
+commentsint = int(comment_count)
+CommenttoLikeRatio = (commentsint/viewsint)*100
+CommenttoLikeRatio = round(CommenttoLikeRatio, 2)
+CommenttoLikeRatioFigure = CommenttoLikeRatio*10
+CommenttoLikeRatioFigure = str(CommenttoLikeRatioFigure)
+CommenttoLikeRatio = str(CommenttoLikeRatio)
+print("This video has a comment to view ratio of " + CommenttoLikeRatioFigure + ":1000 or " + CommenttoLikeRatio + "%")
+
+
 
 
