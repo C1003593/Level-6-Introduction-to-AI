@@ -1,82 +1,85 @@
 import pandas as pd
-from matplotlib import pyplot as plt
-import seaborn as sns
+import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, confusion_matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
 
+#This application can determine which catagory of earning someone could fall into depending on other factors
+
+#Load the data
 Salary_data = pd.read_csv("DataScience_salaries_2024.csv")
-#https://www.kaggle.com/datasets/saurabhbadole/latest-data-science-job-salaries-2024
 
-# We'll focus on predicting salary ranges based on other features
-# For simplicity, we'll only use a subset of features
+#Use a number of features to predict salary group
 features = [
     "work_year",
     "experience_level",
     "employment_type",
     "job_title",
     "remote_ratio",
-    "company_size"
+    "company_size",
 ]
 
-# Drop rows with missing values in any of the selected features
+#This gets rid of rows with missing pieces of data
 Salary_data = Salary_data.dropna(subset=features)
 
-# Convert salary to integer for simplicity
+#Convert the salary_in_usd figure to integer for comparison
 Salary_data["salary_in_usd"] = Salary_data["salary_in_usd"].astype(int)
 
-# Define a function to map salary to a range
-def salary_range(salary_in_usd):
-    if salary_in_usd < 110000:
+#Define custom salary range function for 2 categories
+threshold = Salary_data['salary_in_usd'].quantile(0.5)  #2 quartiles, low being bottom 50% and high being top 50%
+
+def salary_range_custom(salary_in_usd):
+    if salary_in_usd <= threshold:
         return "Low"
-    elif salary_in_usd < 160000:
-        return "Medium"
     else:
         return "High"
 
-# Apply the salary range function to create the target variable
-Salary_data["salary_range"] = Salary_data["salary_in_usd"].apply(salary_range)
+#This creates a new salary range column
+Salary_data["salary_range_custom"] = Salary_data["salary_in_usd"].apply(salary_range_custom)
 
-# Assign values to the X and y variables
-X = Salary_data[features].values
-y = Salary_data["salary_range"].values
+#This assigns the new salary range column to y
+y = Salary_data["salary_range_custom"]
 
-# One-hot encode categorical variables
-X = pd.get_dummies(Salary_data[features], drop_first=True).values
+#This uses one hot encoding to categorize values, this format is more useful for machine learning
+X = Salary_data[features]
+X = pd.get_dummies(X, drop_first=True)
 
-# Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=42)
+#This splits the data into test and train sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Standardize features by removing mean and scaling to unit variance
+#This scales the values to uniform variance
 scaler = StandardScaler()
-X_train = scaler.fit_transform(X_train)
-X_test = scaler.transform(X_test)
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
 
-# Create a k-nearest neighbors classifier
-classifier = KNeighborsClassifier(n_neighbors=10)
+#This improves accuracy using multiple decision trees
+classifier = RandomForestClassifier(n_estimators=100, random_state=42)
 
-# Fit the classifier to the training data
-classifier.fit(X_train, y_train)
+#This makes the classifier use the training data
+classifier.fit(X_train_scaled, y_train)
 
-# Predict the salary range for the test data
-y_predict = classifier.predict(X_test)
+#This makes the application predict the salary range for the test data
+y_pred = classifier.predict(X_test_scaled)
 
-# Calculate the confusion matrix
-conf_matrix = confusion_matrix(y_test, y_predict)
+#This calculates the confusion matrix for the data
+conf_matrix = confusion_matrix(y_test, y_pred)
 
-# Create a DataFrame from the confusion matrix for better visualization
-conf_matrix_df = pd.DataFrame(conf_matrix, index=['Actual Low', 'Actual Medium', 'Actual High'], 
-                              columns=['Predicted Low', 'Predicted Medium', 'Predicted High'])
+#This will be used to create the confusion matrix
+sorted_labels = sorted(y.unique(), reverse=True)
 
-# Plot the confusion matrix as a heatmap
+#This creates a dataframe to use with the confusion matrix
+conf_matrix_df = pd.DataFrame(conf_matrix, index=sorted_labels, columns=sorted_labels)
+
+#This plots the confusion matrix as a heat map
 plt.figure(figsize=(8, 6))
-heatmap = sns.heatmap(conf_matrix_df, annot=True, fmt="d", cmap="YlGnBu", cbar_kws={'label':'Amount of people'})
+heatmap = sns.heatmap(conf_matrix_df, annot=True, fmt="d", cmap="YlGnBu", cbar_kws={'label': 'Amount of people'})
 plt.xlabel('Predicted Income Groups', fontsize=14)
 plt.ylabel('True Income Groups', fontsize=14)
 plt.title('Confusion Matrix')
 plt.show()
 
-# Print the classification report
-print(classification_report(y_test, y_predict))
-
+#This prints the classification report, showing the F1 score
+print(classification_report(y_test, y_pred))
